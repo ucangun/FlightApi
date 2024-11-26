@@ -1,10 +1,42 @@
-"use strict"
+"use strict";
 /* -------------------------------------------------------
     NODEJS EXPRESS | Flight API
 ------------------------------------------------------- */
 
-module.exports = (req, res, next) => {
+const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
+const User = require("../models/user");
 
-   
-    next()
-}
+module.exports = async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.refreshToken) {
+    token = req.cookies.refreshToken;
+  }
+
+  if (!token) {
+    return res.status(401).json({
+      status: "fail",
+      message: "You are not logged in! Please log in to get access.",
+    });
+  }
+
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return res.status(401).json({
+      status: "fail",
+      message: "The user belonging to this token no longer exists.",
+    });
+  }
+
+  // 6) Grant access to the protected route
+  req.user = currentUser;
+
+  next();
+};
