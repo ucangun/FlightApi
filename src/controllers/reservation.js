@@ -20,10 +20,8 @@ module.exports = {
   },
 
   create: async (req, res) => {
-    // Extract data from the request body
     const { flightId } = req.body;
 
-    // Check if the flight exists
     const flight = await Flight.findById(flightId);
     if (!flight) {
       return res.status(404).send({
@@ -31,7 +29,7 @@ module.exports = {
         message: "Flight not found",
       });
     }
-    // Check if req.user exists, and get passengers from req.user
+
     if (!req.user) {
       return res.status(400).send({
         error: true,
@@ -39,17 +37,16 @@ module.exports = {
       });
     }
 
-    // Assuming user has a name and email in their profile
     const passenger = {
-      userName: req.user.name, // assuming req.user has name
-      email: req.user.email, // assuming req.user has email
+      userName: req.user.name,
+      email: req.user.email,
     };
 
     // Create the reservation
     const reservation = await Reservation.create({
       flightId,
-      passengers: [passenger], // Passengers as an array
-      createdId: req.user._id, // Using user _id for createdBy
+      passengers: [passenger],
+      createdId: req.user._id,
     });
 
     res.status(201).send({
