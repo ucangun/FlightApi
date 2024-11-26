@@ -4,6 +4,7 @@
 ------------------------------------------------------- */
 const express = require("express");
 const app = express();
+const cookieParser = require("cookie-parser");
 
 /* ------------------------------------------------------- */
 // Required Modules:
@@ -27,6 +28,9 @@ dbConnection();
 
 // Accept JSON:
 app.use(express.json());
+
+// Cookie Parser
+app.use(cookieParser());
 
 // Check Authentication:
 app.use(require("./src/middlewares/authentication"));
