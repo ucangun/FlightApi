@@ -17,8 +17,8 @@ const reservationSchema = new Schema(
     passengers: {
       type: [
         {
-          userName: String,
-          email: String,
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Passenger",
         },
       ],
       required: true,

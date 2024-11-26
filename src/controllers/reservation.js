@@ -3,6 +3,7 @@
     NODEJS EXPRESS | Reservations API
 ------------------------------------------------------- */
 const Reservation = require("../models/reservation");
+const Passenger = require("../models/passenger");
 const Flight = require("../models/flight");
 
 module.exports = {
@@ -38,14 +39,17 @@ module.exports = {
     }
 
     const passenger = {
-      userName: req.user.name,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      gender: req.user.gender,
       email: req.user.email,
     };
 
-    // Create the reservation
+    const newPassenger = await Passenger.create(passenger);
+
     const reservation = await Reservation.create({
       flightId,
-      passengers: [passenger],
+      passengers: [newPassenger._id],
       createdId: req.user._id,
     });
 
@@ -57,7 +61,7 @@ module.exports = {
 
   read: async (req, res) => {
     const reservation = await Reservation.findById(req.params.id).populate(
-      "flightId passenger"
+      "flightId passengers"
     );
 
     if (!reservation) {
