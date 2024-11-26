@@ -43,6 +43,7 @@ module.exports = {
       lastName: req.user.lastName,
       gender: req.user.gender,
       email: req.user.email,
+      createdId: req.user._id,
     };
 
     const newPassenger = await Passenger.create(passenger);
