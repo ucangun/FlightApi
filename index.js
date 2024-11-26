@@ -33,13 +33,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Check Authentication:
-app.use(require("./src/middlewares/authentication"));
+// app.use(require("./src/middlewares/authentication"));
 
 // Run Logger:
 app.use(require("./src/middlewares/logger"));
 
 // Query Handler:
-app.use(require("./src/middlewares/authentication"));
+app.use(require("./src/middlewares/queryHandler"));
 
 /* ------------------------------------------------------- */
 // Routes:

@@ -12,11 +12,8 @@ module.exports = async (req, res, next) => {
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
-  ) {
+  )
     token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies.refreshToken) {
-    token = req.cookies.refreshToken;
-  }
 
   if (!token) {
     return res.status(401).json({
@@ -25,7 +22,7 @@ module.exports = async (req, res, next) => {
     });
   }
 
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const decoded = await promisify(jwt.verify)(token, process.env.ACCESS_KEY);
 
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
