@@ -4,6 +4,7 @@
 ------------------------------------------------------- */
 // Auth Controller:
 
+const { promisify } = require("util");
 const User = require("../models/user");
 const passwordEncrypt = require("../helpers/passwordEncrypt");
 const jwt = require("jsonwebtoken");
@@ -42,29 +43,88 @@ module.exports = {
       throw new Error("This account is not active.");
     }
 
-    const accessData = {
-      _id: user._id,
-    };
-
-    const accessToken = jwt.sign(accessData, process.env.ACCESS_KEY, {
+    // Access Token Oluşturma
+    const accessToken = jwt.sign({ _id: user._id }, process.env.ACCESS_KEY, {
       expiresIn: "30m",
     });
 
-    const refreshData = {
-      _id: user._id,
-    };
+    // Refresh Token Oluşturma
+    const refreshToken = jwt.sign(
+      { _id: user._id, password: user.password },
+      process.env.REFRESH_KEY,
+      {
+        expiresIn: "1d",
+      }
+    );
 
-    const refreshToken = jwt.sign(refreshData, process.env.REFRESH_KEY, {
-      expiresIn: "1d",
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.status(200).send({
       error: false,
       bearer: {
         accessToken,
-        refreshToken,
       },
       data: user,
+    });
+  },
+
+  refresh: async (req, res) => {
+    /*
+        #swagger.tags = ["Authentication"]
+        #swagger.summary = "Refresh"
+        #swagger.description = 'Refresh with refreshToken for get accessToken'
+        #swagger.parameters["body"] = {
+            in: "body",
+            required: true,
+            schema: {
+                "bearer": {
+                    refresh: '...refresh_token...'
+                }
+            }
+        }
+    */
+
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      res.errorStatusCode = 401;
+      throw new Error("Refresh token is required.");
+    }
+
+    const refreshData = await promisify(jwt.verify)(
+      refreshToken,
+      process.env.REFRESH_KEY
+    );
+
+    if (!refreshData) {
+      res.errorStatusCode = 401;
+      throw new Error("Invalid refresh token.");
+    }
+
+    const user = await User.findOne({ _id: refreshData._id });
+
+    if (!(user && user.password == refreshData.password)) {
+      res.errorStatusCode = 401;
+      throw new Error("Wrong id or password.");
+    }
+
+    if (!user.isActive) {
+      res.errorStatusCode = 401;
+      throw new Error("This account is not active.");
+    }
+
+    res.status(200).send({
+      error: false,
+      bearer: {
+        access: jwt.sign(user.toJSON(), process.env.ACCESS_KEY, {
+          expiresIn: "30m",
+        }),
+      },
     });
   },
 };
