@@ -1,19 +1,20 @@
-"use strict"
+"use strict";
 /* -------------------------------------------------------
     NODEJS EXPRESS | Flight API
 ------------------------------------------------------- */
 // MongoDB Connection:
 
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const dbConnection = function() {
-    mongoose.connect(process.env.MONGODB)
-        .then(() => console.log('* DB Connected * '))
-        .catch((err) => console.log('* DB Not Connected * ', err))
-}
+const dbConnection = function () {
+  mongoose
+    .connect(process.env.MONGOURI)
+    .then(() => console.log("* DB Connected * "))
+    .catch((err) => console.log("* DB Not Connected * ", err));
+};
 
 /* ------------------------------------------------------- */
 module.exports = {
-    mongoose,
-    dbConnection
-} 
+  mongoose,
+  dbConnection,
+};
