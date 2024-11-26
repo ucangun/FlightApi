@@ -17,14 +17,15 @@ const reservationSchema = new Schema(
     passengers: {
       type: [
         {
-          name: String,
+          userName: String,
           email: String,
         },
       ],
       required: true,
     },
     createdId: {
-      type: Number,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       default: Date.now,
     },
   },

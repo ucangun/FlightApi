@@ -24,7 +24,7 @@ module.exports = async (req, res, next) => {
 
   const decoded = await promisify(jwt.verify)(token, process.env.ACCESS_KEY);
 
-  const currentUser = await User.findById(decoded.id);
+  const currentUser = await User.findById(decoded._id);
   if (!currentUser) {
     return res.status(401).json({
       status: "fail",

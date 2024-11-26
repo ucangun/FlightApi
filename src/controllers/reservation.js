@@ -41,7 +41,7 @@ module.exports = {
 
     // Assuming user has a name and email in their profile
     const passenger = {
-      name: req.user.name, // assuming req.user has name
+      userName: req.user.name, // assuming req.user has name
       email: req.user.email, // assuming req.user has email
     };
 
