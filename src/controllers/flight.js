@@ -131,17 +131,8 @@ module.exports = {
 
     const { deletedCount } = await Flight.deleteOne({ _id: req.params.id });
 
-    if (!deletedCount) {
-      res.status(404).send({
-        error: true,
-        message: "Flight not found",
-      });
-      return;
-    }
-
-    res.status(204).send({
-      error: false,
-      message: "Flight deleted successfully",
+    res.status(deletedCount ? 204 : 404).send({
+      error: !deletedCount,
     });
   },
 };

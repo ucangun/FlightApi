@@ -14,6 +14,9 @@ router.use("/users", require("./user"));
 // flights:
 router.use("/flights", require("./flight"));
 
+// reservations:
+router.use("/reservations", require("./reservation"));
+
 // documents:
 router.use("/documents", require("./document"));
 
