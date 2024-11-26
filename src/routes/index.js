@@ -11,6 +11,9 @@ router.use("/auth", require("./auth"));
 // users:
 router.use("/users", require("./user"));
 
+// flights:
+router.use("/flights", require("./flight"));
+
 // documents:
 router.use("/documents", require("./document"));
 
