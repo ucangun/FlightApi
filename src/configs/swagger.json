@@ -1,0 +1,36 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Flight Reservation API",
+    "description": "Flight Reservation Management System",
+    "termsOfService": "http://www.clarusway.com",
+    "contact": {
+      "name": "Clarusway",
+      "email": "ali@clarusway.com"
+    },
+    "license": {
+      "name": "ISC Licence"
+    }
+  },
+  "host": "127.0.0.1:8000",
+  "basePath": "/",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "JWT": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Enter Your AccessToken (JWT) for Login. Example: <b>Bearer <i>...token...<i></b>"
+    }
+  },
+  "paths": {},
+  "security": [
+    {
+      "JWT": true
+    }
+  ]
+}
