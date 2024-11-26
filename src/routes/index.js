@@ -5,6 +5,9 @@
 const router = require("express").Router();
 /* ------------------------------------------------------- */
 
+// auth:
+router.use("/auth", require("./auth"));
+
 // users:
 router.use("/users", require("./user"));
 
