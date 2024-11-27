@@ -4,6 +4,8 @@
 ------------------------------------------------------- */
 
 const router = require("express").Router();
+const restrictTo = require("../middlewares/permissions");
+
 const {
   list,
   create,
@@ -11,14 +13,13 @@ const {
   update,
   deletePassenger,
 } = require("../controllers/passenger");
-const restrictTo = require("../middlewares/permissions");
 
 // URL: /passengers
 
 // Get all passengers and create a new passenger
-router.route("/").get(restrictTo("admin", "staff"), list).post(create);
+router.route("/").get(restrictTo("admin"), list).post(create);
 
-router.use(restrictTo("admin", "staff"));
+router.use(restrictTo("admin"));
 
 router
   .route("/:id")
