@@ -32,6 +32,7 @@ module.exports = async (req, res, next) => {
 
   // 6) Grant access to the protected route
   req.user = currentUser;
+  req.body.createdId = req.user?._id;
 
   next();
 };

@@ -22,6 +22,7 @@ module.exports = {
 
   create: async (req, res) => {
     const { flightId } = req.body;
+    const passengerInfo = req.body.passengers;
 
     const flight = await Flight.findById(flightId);
     if (!flight) {
@@ -31,27 +32,34 @@ module.exports = {
       });
     }
 
-    if (!req.user) {
-      return res.status(400).send({
-        error: true,
-        message: "User not authenticated",
-      });
-    }
+    let passenger;
 
-    const passenger = {
-      firstName: req.user.firstName,
-      lastName: req.user.lastName,
-      gender: req.user.gender,
-      email: req.user.email,
-      createdId: req.user._id,
-    };
+    // Kullanıcı giriş yapmışsa, req.user'dan yolcu bilgilerini al
+    if (req.user) {
+      passenger = {
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        gender: req.user.gender,
+        email: req.user.email,
+      };
+    } else {
+      // Kullanıcı giriş yapmamışsa, passangersInfo'dan gelen veriyi al
+      if (!passengerInfo) {
+        return res.status(400).send({
+          error: true,
+          message: "Passenger information is required.",
+        });
+      }
+
+      passenger = passengerInfo;
+    }
 
     const newPassenger = await Passenger.create(passenger);
 
     const reservation = await Reservation.create({
       flightId,
       passengers: [newPassenger._id],
-      createdId: req.user._id,
+      createdId: req.user ? req.user._id : newPassenger._id,
     });
 
     res.status(201).send({

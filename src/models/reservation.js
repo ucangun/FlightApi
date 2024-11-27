@@ -18,15 +18,15 @@ const reservationSchema = new Schema(
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Passenger",
+          ref: "User",
+          required: true,
         },
       ],
-      required: true,
     },
     createdId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: Date.now,
+      ref: "Passenger",
+      required: true,
     },
   },
   { collection: "reservations", timestamps: true }

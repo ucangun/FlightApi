@@ -39,7 +39,7 @@ const flightSchema = new mongoose.Schema(
     createdId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      default: Date.now,
+      required: true,
     },
   },
   {
