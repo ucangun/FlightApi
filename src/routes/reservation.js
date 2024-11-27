@@ -15,8 +15,6 @@ const {
 
 // URL: /reservations
 
-router.use(require("../middlewares/authentication"));
-
 // Get all reservations and create a new reservation
 router.route("/").get(list).post(create);
 

@@ -33,6 +33,11 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
+    role: {
+      type: String,
+      enum: ["user", "staff", "admin"],
+      default: "user",
+    },
     userName: {
       type: String,
       trim: true,
@@ -58,14 +63,6 @@ const UserSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
-    },
-    isStaff: {
-      type: Boolean,
-      default: false,
-    },
-    isAdmin: {
-      type: Boolean,
-      default: false,
     },
   },
   {
