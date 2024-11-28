@@ -253,7 +253,7 @@
           "Users"
         ],
         "summary": "List Users",
-        "description": "  You can send query with endpoint for filter[], search[], sort[], page and limit.  <ul> Examples:   <li>URL/?<b>filter[field1]=value1&filter[field2]=value2</b></li>   <li>URL/?<b>search[field1]=value1&search[field2]=value2</b></li>   <li>URL/?<b>sort[field1]=1&sort[field2]=-1</b></li>   <li>URL/?<b>page=2&limit=1</b></li>  </ul>  ",
+        "description": "  You can send query with endpoint for filter[], search[], sort[], page and limit.  <ul> Examples:  <li>URL/?<b>filter[field1]=value1&filter[field2]=value2</b></li>  <li>URL/?<b>search[field1]=value1&search[field2]=value2</b></li>  <li>URL/?<b>sort[field1]=1&sort[field2]=-1</b></li>  <li>URL/?<b>page=2&limit=1</b></li>  </ul>  ",
         "parameters": [
           {
             "name": "authorization",
@@ -333,7 +333,7 @@
           "Users"
         ],
         "summary": "Read User",
-        "description": "",
+        "description": "Fetch details of a specific user by ID",
         "parameters": [
           {
             "name": "id",
@@ -423,7 +423,7 @@
           "Users"
         ],
         "summary": "Delete User",
-        "description": "",
+        "description": "Delete a user by ID",
         "parameters": [
           {
             "name": "id",
@@ -450,8 +450,14 @@
           }
         ],
         "responses": {
+          "204": {
+            "description": "No Content"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -1085,14 +1091,52 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "flightId": {
+                  "type": "string",
+                  "example": "1234567890abcdef12345678"
+                },
+                "passengers": {
+                  "type": "array",
+                  "example": [
+                    "1234567890abcdef12345679"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
           },
+          "201": {
+            "description": "Created"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -1146,16 +1190,93 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Reservation created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "reservationId": {
+                      "type": "string",
+                      "example": "12345"
+                    },
+                    "flightId": {
+                      "type": "string",
+                      "example": "67890"
+                    },
+                    "passengers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string",
+                            "example": "John"
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "example": "Doe"
+                          }
+                        }
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-11-20T00:00:00Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Invalid passenger information",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Passenger information is required."
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Flight not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Flight not found"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1182,13 +1303,74 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Reservation found successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "reservationId": {
+                      "type": "string",
+                      "example": "12345"
+                    },
+                    "flightId": {
+                      "type": "string",
+                      "example": "67890"
+                    },
+                    "passengers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string",
+                            "example": "John"
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "example": "Doe"
+                          }
+                        }
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-11-20T00:00:00Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Reservation not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Reservation not found"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -1236,13 +1418,74 @@
         ],
         "responses": {
           "202": {
-            "description": "Accepted"
+            "description": "Reservation updated successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "reservationId": {
+                      "type": "string",
+                      "example": "12345"
+                    },
+                    "flightId": {
+                      "type": "string",
+                      "example": "67890"
+                    },
+                    "passengers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string",
+                            "example": "John"
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "example": "Doe"
+                          }
+                        }
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-11-20T00:00:00Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Reservation not found or no changes made",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Reservation not found or no changes made"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -1279,13 +1522,37 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "Reservation deleted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Reservation not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -1333,13 +1600,74 @@
         ],
         "responses": {
           "202": {
-            "description": "Accepted"
+            "description": "Reservation updated successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "reservationId": {
+                      "type": "string",
+                      "example": "12345"
+                    },
+                    "flightId": {
+                      "type": "string",
+                      "example": "67890"
+                    },
+                    "passengers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string",
+                            "example": "John"
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "example": "Doe"
+                          }
+                        }
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2024-11-20T00:00:00Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Reservation not found or no changes made",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Reservation not found or no changes made"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1349,8 +1677,8 @@
         "tags": [
           "Passengers"
         ],
-        "summary": "List Passengers",
-        "description": "Fetch all passengers from the database",
+        "summary": "List all passengers",
+        "description": "Fetch all passengers from the database with optional filters, sorting, and pagination.",
         "parameters": [
           {
             "name": "authorization",
@@ -1360,7 +1688,68 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "List of passengers",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "details": {
+                  "type": "object",
+                  "properties": {
+                    "page": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "limit": {
+                      "type": "number",
+                      "example": 10
+                    },
+                    "total": {
+                      "type": "number",
+                      "example": 100
+                    }
+                  }
+                },
+                "result": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "passengerId123"
+                      },
+                      "firstName": {
+                        "type": "string",
+                        "example": "John"
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "example": "Doe"
+                      },
+                      "gender": {
+                        "type": "string",
+                        "example": "Male"
+                      },
+                      "email": {
+                        "type": "string",
+                        "example": "john.doe@example.com"
+                      },
+                      "createdId": {
+                        "type": "string",
+                        "example": "userId"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -1371,8 +1760,8 @@
         "tags": [
           "Passengers"
         ],
-        "summary": "Create Passenger",
-        "description": "",
+        "summary": "Create a new passenger",
+        "description": "Create a new passenger entry in the database.",
         "parameters": [
           {
             "name": "authorization",
@@ -1402,7 +1791,7 @@
                   "type": "string",
                   "example": "john.doe@example.com"
                 },
-                "createdId": {
+                " ": {
                   "type": "string",
                   "example": "userId"
                 }
@@ -1412,10 +1801,67 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Passenger   successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "passengerId123"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "John"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Doe"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "Male"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "john.doe@example.com"
+                    },
+                    "createdId": {
+                      "type": "string",
+                      "example": "userId"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Error creating passenger",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Error creating passenger"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -1428,14 +1874,15 @@
         "tags": [
           "Passengers"
         ],
-        "summary": "Read Passenger",
-        "description": "",
+        "summary": "Get a passenger by ID",
+        "description": "Fetch a passenger from the database using their unique ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Unique ID of the passenger"
           },
           {
             "name": "authorization",
@@ -1445,13 +1892,70 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Passenger details",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "passengerId123"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "John"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Doe"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "Male"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "john.doe@example.com"
+                    },
+                    "createdId": {
+                      "type": "string",
+                      "example": "userId"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Passenger not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Passenger not found"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -1459,14 +1963,15 @@
         "tags": [
           "Passengers"
         ],
-        "summary": "Update Passenger",
-        "description": "",
+        "summary": "Update a passenger",
+        "description": "Update a passenger's details in the database.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Unique ID of the passenger to be  "
           },
           {
             "name": "authorization",
@@ -1502,13 +2007,70 @@
         ],
         "responses": {
           "202": {
-            "description": "Accepted"
+            "description": "Passenger updated successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "passengerId123"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "John"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Doe"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "Male"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "john.doe@example.com"
+                    },
+                    "createdId": {
+                      "type": "string",
+                      "example": "userId"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Passenger not found or no changes made",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Passenger not found or no changes made"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -1516,14 +2078,15 @@
         "tags": [
           "Passengers"
         ],
-        "summary": "Delete Passenger",
-        "description": "",
+        "summary": "Delete a passenger",
+        "description": "Delete a passenger from the database using their unique ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Unique ID of the passenger to be deleted"
           },
           {
             "name": "authorization",
@@ -1545,13 +2108,41 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "Passenger deleted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Passenger not found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Passenger not found"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -1559,14 +2150,15 @@
         "tags": [
           "Passengers"
         ],
-        "summary": "Update Passenger",
-        "description": "",
+        "summary": "Update a passenger",
+        "description": "Update a passenger's details in the database.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Unique ID of the passenger to be  "
           },
           {
             "name": "authorization",
@@ -1602,13 +2194,70 @@
         ],
         "responses": {
           "202": {
-            "description": "Accepted"
+            "description": "Passenger updated successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "passengerId123"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "John"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Doe"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "Male"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "john.doe@example.com"
+                    },
+                    "createdId": {
+                      "type": "string",
+                      "example": "userId"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Passenger not found or no changes made",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Passenger not found or no changes made"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
