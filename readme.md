@@ -14,13 +14,13 @@ A simple **Flight API** built with **Express.js** that allows users to manage fl
 
 You can explore the API using Swagger UI. After starting the server, visit the following URL in your browser:
 
-[Swagger UI - Flight API Documentation](https://YOUR_FLIGHT_API_URL_HERE/api-docs/#/)
+[Swagger UI - Flight API Documentation](https://flightapi-0fa6.onrender.com/documents/swagger/)
 
 ## Live Demo (Render)
 
 The API is live on **Render**. You can access it using the following URL:
 
-[Live Demo - Flight API](https://YOUR_RENDER_APP_URL_HERE/)
+[Live Demo - Flight API](https://flightapi-0fa6.onrender.com/)
 
 ## Technologies Used
 

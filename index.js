@@ -50,7 +50,6 @@ app.all("/", (req, res) => {
     error: false,
     message: "Welcome to FLIGHT RESERVATION API",
     documents: "/documents",
-    user: req.user,
   });
 });
 
