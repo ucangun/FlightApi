@@ -27,7 +27,6 @@ const passengerSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
     },
     createdId: {
       type: mongoose.Schema.Types.ObjectId,

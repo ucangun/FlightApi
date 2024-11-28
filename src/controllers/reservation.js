@@ -62,26 +62,6 @@ module.exports = {
                       }
                   }
               }
-              #swagger.responses[201] = {
-                description: "Reservation created successfully",
-                schema: {
-                  error: false,
-                  result: {
-                    reservationId: "12345",
-                    flightId: "67890",
-                    passengers: [{ firstName: "John", lastName: "Doe" }],
-                    createdAt: "2024-11-20T00:00:00Z"
-                  }
-              }
-              }
-              #swagger.responses[404] = {
-                description: "Flight not found",
-                schema: { error: true, message: "Flight not found" }
-              }
-              #swagger.responses[400] = {
-                description: "Invalid passenger information",
-                schema: { error: true, message: "Passenger information is required." }
-              }
           */
 
     const { flightId } = req.body;
@@ -104,13 +84,19 @@ module.exports = {
         email: req.user.email,
       };
     } else {
-      if (!passengerInfo) {
+      if (
+        !passengerInfo ||
+        passengerInfo.length === 0 ||
+        !passengerInfo[0].firstName ||
+        !passengerInfo[0].lastName ||
+        !passengerInfo[0].email
+      ) {
         return res.status(400).send({
           error: true,
           message: "Passenger information is required.",
         });
       }
-      passenger = passengerInfo;
+      passenger = passengerInfo[0];
     }
 
     const newPassenger = await Passenger.create(passenger);
