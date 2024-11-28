@@ -14,11 +14,26 @@ module.exports = {
               #swagger.tags = ["Reservations"]
               #swagger.summary = "List Reservations"
               #swagger.description = "Fetch all reservations with pagination and filters"
+              #swagger.responses[200] = {
+                description: "List of reservations fetched successfully",
+                schema: {
+                  error: false,
+                  details: { 
+                    pagination: { currentPage: 1, totalPages: 5 },
+                    filters: { flightId: 'string', date: 'string' }
+                  },
+                  data: [
+                    {
+                      reservationId: "12345",
+                      flightId: "67890",
+                      passengers: [{ firstName: "John", lastName: "Doe" }],
+                      createdAt: "2024-11-20T00:00:00Z"
+                    }
+                  ]
+              }
           */
 
     const reservations = await res.getModelList(Reservation);
-
-    // Get the details of pagination, filters, etc.
     const details = await res.getModelListDetails(Reservation);
 
     res.status(200).send({
@@ -47,6 +62,26 @@ module.exports = {
                       }
                   }
               }
+              #swagger.responses[201] = {
+                description: "Reservation created successfully",
+                schema: {
+                  error: false,
+                  result: {
+                    reservationId: "12345",
+                    flightId: "67890",
+                    passengers: [{ firstName: "John", lastName: "Doe" }],
+                    createdAt: "2024-11-20T00:00:00Z"
+                  }
+              }
+              }
+              #swagger.responses[404] = {
+                description: "Flight not found",
+                schema: { error: true, message: "Flight not found" }
+              }
+              #swagger.responses[400] = {
+                description: "Invalid passenger information",
+                schema: { error: true, message: "Passenger information is required." }
+              }
           */
 
     const { flightId } = req.body;
@@ -61,9 +96,7 @@ module.exports = {
     }
 
     let passenger;
-
     if (req.user) {
-      // If user is logged in, use their info
       passenger = {
         firstName: req.user.firstName,
         lastName: req.user.lastName,
@@ -71,7 +104,6 @@ module.exports = {
         email: req.user.email,
       };
     } else {
-      // If not logged in, use provided passenger info
       if (!passengerInfo) {
         return res.status(400).send({
           error: true,
@@ -101,6 +133,22 @@ module.exports = {
               #swagger.tags = ["Reservations"]
               #swagger.summary = "Read Reservation"
               #swagger.description = "Fetch details of a specific reservation by ID"
+              #swagger.responses[200] = {
+                description: "Reservation found successfully",
+                schema: {
+                  error: false,
+                  result: {
+                    reservationId: "12345",
+                    flightId: "67890",
+                    passengers: [{ firstName: "John", lastName: "Doe" }],
+                    createdAt: "2024-11-20T00:00:00Z"
+                  }
+              }
+              }
+              #swagger.responses[404] = {
+                description: "Reservation not found",
+                schema: { error: true, message: "Reservation not found" }
+              }
           */
 
     const reservation = await Reservation.findById(req.params.id).populate(
@@ -133,6 +181,22 @@ module.exports = {
                       "passengers": ["1234567890abcdef12345679"]
                   }
               }
+              #swagger.responses[202] = {
+                description: "Reservation updated successfully",
+                schema: {
+                  error: false,
+                  result: {
+                    reservationId: "12345",
+                    flightId: "67890",
+                    passengers: [{ firstName: "John", lastName: "Doe" }],
+                    createdAt: "2024-11-20T00:00:00Z"
+                  }
+              }
+              }
+              #swagger.responses[404] = {
+                description: "Reservation not found or no changes made",
+                schema: { error: true, message: "Reservation not found or no changes made" }
+              }
           */
 
     const result = await Reservation.updateOne(
@@ -160,6 +224,14 @@ module.exports = {
               #swagger.tags = ["Reservations"]
               #swagger.summary = "Delete Reservation"
               #swagger.description = "Delete a specific reservation by ID"
+              #swagger.responses[204] = {
+                description: "Reservation deleted successfully",
+                schema: { error: false }
+              }
+              #swagger.responses[404] = {
+                description: "Reservation not found",
+                schema: { error: true }
+              }
           */
 
     const { deletedCount } = await Reservation.deleteOne({
