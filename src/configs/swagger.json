@@ -30,52 +30,11 @@
   "paths": {
     "/auth/login": {
       "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "createdId": {
-                  "example": "any"
-                },
-                "userName": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
-    "/auth/refresh": {
-      "get": {
         "tags": [
           "Authentication"
         ],
-        "summary": "Refresh",
-        "description": "Refresh with   for get accessToken",
+        "summary": "Login",
+        "description": "Login with username (or email) and password to get an access token and refresh token.",
         "parameters": [
           {
             "name": "authorization",
@@ -86,17 +45,21 @@
             "name": "body",
             "in": "body",
             "required": true,
+            "description": "User credentials for login",
             "schema": {
               "type": "object",
               "properties": {
-                "bearer": {
-                  "type": "object",
-                  "properties": {
-                    "refresh": {
-                      "type": "string",
-                      "example": "...refresh_token..."
-                    }
-                  }
+                "username": {
+                  "type": "string",
+                  "example": "testUser"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "test@example.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "aA?123456"
                 }
               }
             }
@@ -104,10 +67,182 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Login successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "bearer": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                  }
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "12345"
+                    },
+                    "userName": {
+                      "type": "string",
+                      "example": "testUser"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "test@example.com"
+                    },
+                    "isActive": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Missing required fields",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Username / Email and Password required!"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized - Incorrect credentials or inactive account",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Incorrect Credentials!"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Refresh",
+        "description": "Refresh access token using the refresh token.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "cookie",
+            "in": "cookie",
+            "required": true,
+            "description": "Refresh token stored in cookie",
+            "schema": {
+              "type": "object",
+              "properties": {
+                " ": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access token   successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "bearer": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Missing cookie",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Refresh token is required."
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing refresh token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Invalid refresh token."
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }

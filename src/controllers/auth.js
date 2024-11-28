@@ -10,20 +10,51 @@ const passwordEncrypt = require("../helpers/passwordEncrypt");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
-  /*
-            #swagger.tags = ["Authentication"]
-            #swagger.summary = "Login"
-            #swagger.description = 'Login with username (or email) and password for get simpleToken and JWT'
-            #swagger.parameters["body"] = {
-                in: "body",
-                required: true,
-                schema: {
-                    "username": "test",
-                    "password": "aA?123456",
+  login: async (req, res) => {
+    /*
+        #swagger.tags = ["Authentication"]
+        #swagger.summary = "Login"
+        #swagger.description = "Login with username (or email) and password to get an access token and refresh token."
+        #swagger.parameters["body"] = {
+            in: "body",
+            required: true,
+            description: "User credentials for login",
+            schema: {
+                "username": "testUser",
+                "email": "test@example.com",
+                "password": "aA?123456"
+            }
+        }
+        #swagger.responses[200] = {
+            description: "Login successful",
+            schema: {
+                "error": false,
+                "bearer": {
+                    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                },
+                "data": {
+                    "_id": "12345",
+                    "userName": "testUser",
+                    "email": "test@example.com",
+                    "isActive": true
                 }
             }
-        */
-  login: async (req, res) => {
+        }
+        #swagger.responses[401] = {
+            description: "Unauthorized - Incorrect credentials or inactive account",
+            schema: {
+                "error": true,
+                "message": "Incorrect Credentials!"
+            }
+        }
+        #swagger.responses[400] = {
+            description: "Bad Request - Missing required fields",
+            schema: {
+                "error": true,
+                "message": "Username / Email and Password required!"
+            }
+        }
+    */
     const { userName, email, password } = req.body;
 
     if (!((userName || email) && password)) {
@@ -35,7 +66,7 @@ module.exports = {
 
     if (user?.password !== passwordEncrypt(password)) {
       res.errorStatusCode = 401;
-      throw new Error("Incorrect Credeantials!");
+      throw new Error("Incorrect Credentials!");
     }
 
     if (!user.isActive) {
@@ -77,18 +108,39 @@ module.exports = {
     /*
         #swagger.tags = ["Authentication"]
         #swagger.summary = "Refresh"
-        #swagger.description = 'Refresh with refreshToken for get accessToken'
-        #swagger.parameters["body"] = {
-            in: "body",
+        #swagger.description = "Refresh access token using the refresh token."
+        #swagger.parameters["cookie"] = {
+            in: "cookie",
             required: true,
+            description: "Refresh token stored in cookie",
             schema: {
+                "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            }
+        }
+        #swagger.responses[200] = {
+            description: "Access token refreshed successfully",
+            schema: {
+                "error": false,
                 "bearer": {
-                    refresh: '...refresh_token...'
+                    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 }
             }
         }
+        #swagger.responses[401] = {
+            description: "Unauthorized - Invalid or missing refresh token",
+            schema: {
+                "error": true,
+                "message": "Invalid refresh token."
+            }
+        }
+        #swagger.responses[400] = {
+            description: "Bad Request - Missing cookie",
+            schema: {
+                "error": true,
+                "message": "Refresh token is required."
+            }
+        }
     */
-
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
@@ -110,7 +162,7 @@ module.exports = {
 
     if (!(user && user.password == refreshData.password)) {
       res.errorStatusCode = 401;
-      throw new Error("Wrong id or password.");
+      throw new Error("Wrong ID or password.");
     }
 
     if (!user.isActive) {
@@ -121,7 +173,7 @@ module.exports = {
     res.status(200).send({
       error: false,
       bearer: {
-        access: jwt.sign(user.toJSON(), process.env.ACCESS_KEY, {
+        access: jwt.sign({ _id: user._id }, process.env.ACCESS_KEY, {
           expiresIn: "30m",
         }),
       },
