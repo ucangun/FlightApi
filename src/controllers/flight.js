@@ -3,29 +3,44 @@
     NODEJS EXPRESS | Flight API
 ------------------------------------------------------- */
 
-// Flight Controller:
-
 const Flight = require("../models/flight");
 
 module.exports = {
   // List flights
   list: async (req, res) => {
     /* 
-              #swagger.tags = ["Flights"]
-              #swagger.summary = "List Flights"
-              #swagger.description = `
-                  You can send query with endpoint for filter[], search[], sort[], page and limit.
-                  <ul> Examples:
-                      <li>URL/?<b>filter[field1]=value1&filter[field2]=value2</b></li>
-                      <li>URL/?<b>search[field1]=value1&search[field2]=value2</b></li>
-                      <li>URL/?<b>sort[field1]=1&sort[field2]=-1</b></li>
-                      <li>URL/?<b>page=2&limit=1</b></li>
-                  </ul>
-              `
-          */
+        #swagger.tags = ["Flights"]
+        #swagger.summary = "List all Flights"
+        #swagger.description = `
+            Retrieve all flights with optional filtering, searching, and sorting.
+            <ul>
+                <li>Filter: ?filter[field]=value</li>
+                <li>Search: ?search[field]=value</li>
+                <li>Sort: ?sort[field]=1/-1</li>
+                <li>Pagination: ?page=1&limit=10</li>
+            </ul>
+        `
+        #swagger.responses[200] = {
+            description: "List of flights",
+            schema: {
+                error: false,
+                details: { page: 1, limit: 10, total: 100 },
+                result: [
+                    {
+                        _id: "flightId123",
+                        flightNumber: "TK123",
+                        airline: "Turkish Airlines",
+                        departure: "Istanbul",
+                        departureDate: "2024-12-25T10:00:00",
+                        arrival: "New York",
+                        arrivalDate: "2024-12-25T18:00:00"
+                    }
+                ]
+            }
+        }
+    */
 
     const result = await res.getModelList(Flight);
-
     res.status(200).send({
       error: false,
       details: await res.getModelListDetails(Flight),
@@ -36,40 +51,78 @@ module.exports = {
   // Create flight
   create: async (req, res) => {
     /* 
-              #swagger.tags = ["Flights"]
-              #swagger.summary = "Create Flight"
-              #swagger.parameters['body'] = {
-                  in:'body',
-                  required: true,
-                  schema: {
-                      "flightNumber": "TK123",
-                      "airline": "Turkish Airlines",
-                      "departure": "Istanbul",
-                      "departureDate": "2024-12-25T10:00:00",
-                      "arrival": "New York",
-                      "arrivalDate": "2024-12-25T18:00:00",
-                      "createdBy": "userId",
-                  }
-              }
-          */
+        #swagger.tags = ["Flights"]
+        #swagger.summary = "Create a new Flight"
+        #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                flightNumber: "TK123",
+                airline: "Turkish Airlines",
+                departure: "Istanbul",
+                departureDate: "2024-12-25T10:00:00",
+                arrival: "New York",
+                arrivalDate: "2024-12-25T18:00:00",
+                createdId: "64b6c3f5f55a2e3a9a1b1c7d"
+            }
+        }
+        #swagger.responses[200] = {
+            description: "Flight successfully created",
+            schema: {
+                error: false,
+                result: {
+                    _id: "flightId123",
+                    flightNumber: "TK123",
+                    airline: "Turkish Airlines",
+                    departure: "Istanbul",
+                    departureDate: "2024-12-25T10:00:00",
+                    arrival: "New York",
+                    arrivalDate: "2024-12-25T18:00:00",
+                    createdId: "64b6c3f5f55a2e3a9a1b1c7d"
+                }
+            }
+        }
+    */
 
     const result = await Flight.create(req.body);
-
     res.status(200).send({
       error: false,
       result,
     });
   },
 
-  // Read a single flight by ID
+  // Read a flight by ID
   read: async (req, res) => {
     /* 
-              #swagger.tags = ["Flights"]
-              #swagger.summary = "Read Flight"
-          */
+        #swagger.tags = ["Flights"]
+        #swagger.summary = "Get Flight by ID"
+        #swagger.parameters['id'] = {
+            in: 'path',
+            required: true,
+            description: "Flight ID"
+        }
+        #swagger.responses[200] = {
+            description: "Flight details",
+            schema: {
+                error: false,
+                result: {
+                    _id: "flightId123",
+                    flightNumber: "TK123",
+                    airline: "Turkish Airlines",
+                    departure: "Istanbul",
+                    departureDate: "2024-12-25T10:00:00",
+                    arrival: "New York",
+                    arrivalDate: "2024-12-25T18:00:00"
+                }
+            }
+        }
+        #swagger.responses[404] = {
+            description: "Flight not found",
+            schema: { error: true, message: "Flight not found" }
+        }
+    */
 
     const result = await Flight.findOne({ _id: req.params.id });
-
     if (!result) {
       res.status(404).send({
         error: true,
@@ -87,21 +140,34 @@ module.exports = {
   // Update a flight by ID
   update: async (req, res) => {
     /* 
-              #swagger.tags = ["Flights"]
-              #swagger.summary = "Update Flight"
-              #swagger.parameters['body'] = {
-                  in: 'body',
-                  required: true,
-                  schema: {
-                      "flightNumber": "TK123",
-                      "airline": "Turkish Airlines",
-                      "departure": "Istanbul",
-                      "departureDate": "2024-12-25T10:00:00",
-                      "arrival": "New York",
-                      "arrivalDate": "2024-12-25T18:00:00",
-                  }
-              }
-          */
+        #swagger.tags = ["Flights"]
+        #swagger.summary = "Update Flight"
+        #swagger.parameters['id'] = {
+            in: 'path',
+            required: true,
+            description: "Flight ID"
+        }
+        #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                flightNumber: "TK124",
+                airline: "Turkish Airlines",
+                departure: "Ankara",
+                departureDate: "2024-12-26T12:00:00",
+                arrival: "London",
+                arrivalDate: "2024-12-26T14:00:00"
+            }
+        }
+        #swagger.responses[202] = {
+            description: "Flight successfully updated",
+            schema: { error: false, result: { modifiedCount: 1 } }
+        }
+        #swagger.responses[404] = {
+            description: "Flight not found",
+            schema: { error: true, message: "Flight not found or no changes made" }
+        }
+    */
 
     const result = await Flight.updateOne({ _id: req.params.id }, req.body, {
       new: true,
@@ -125,12 +191,23 @@ module.exports = {
   // Delete a flight by ID
   deleteFlight: async (req, res) => {
     /* 
-              #swagger.tags = ["Flights"]
-              #swagger.summary = "Delete Flight"
-          */
+        #swagger.tags = ["Flights"]
+        #swagger.summary = "Delete Flight by ID"
+        #swagger.parameters['id'] = {
+            in: 'path',
+            required: true,
+            description: "Flight ID"
+        }
+        #swagger.responses[204] = {
+            description: "Flight successfully deleted"
+        }
+        #swagger.responses[404] = {
+            description: "Flight not found",
+            schema: { error: true }
+        }
+    */
 
     const { deletedCount } = await Flight.deleteOne({ _id: req.params.id });
-
     res.status(deletedCount ? 204 : 404).send({
       error: !deletedCount,
     });
