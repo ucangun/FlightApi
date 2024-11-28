@@ -2,12 +2,20 @@
 /* -------------------------------------------------------
     NODEJS EXPRESS | Reservations API
 ------------------------------------------------------- */
+
 const Reservation = require("../models/reservation");
 const Passenger = require("../models/passenger");
 const Flight = require("../models/flight");
 
 module.exports = {
+  // List Reservations
   list: async (req, res) => {
+    /* 
+              #swagger.tags = ["Reservations"]
+              #swagger.summary = "List Reservations"
+              #swagger.description = "Fetch all reservations with pagination and filters"
+          */
+
     const reservations = await res.getModelList(Reservation);
 
     // Get the details of pagination, filters, etc.
@@ -20,7 +28,27 @@ module.exports = {
     });
   },
 
+  // Create a Reservation
   create: async (req, res) => {
+    /* 
+              #swagger.tags = ["Reservations"]
+              #swagger.summary = "Create Reservation"
+              #swagger.description = "Create a new reservation for a flight and passengers"
+              #swagger.parameters['body'] = {
+                  in: 'body',
+                  required: true,
+                  schema: {
+                      "flightId": "1234567890abcdef12345678",
+                      "passengers": {
+                          "firstName": "John",
+                          "lastName": "Doe",
+                          "gender": "Male",
+                          "email": "john.doe@example.com"
+                      }
+                  }
+              }
+          */
+
     const { flightId } = req.body;
     const passengerInfo = req.body.passengers;
 
@@ -34,8 +62,8 @@ module.exports = {
 
     let passenger;
 
-    // Kullanıcı giriş yapmışsa, req.user'dan yolcu bilgilerini al
     if (req.user) {
+      // If user is logged in, use their info
       passenger = {
         firstName: req.user.firstName,
         lastName: req.user.lastName,
@@ -43,14 +71,13 @@ module.exports = {
         email: req.user.email,
       };
     } else {
-      // Kullanıcı giriş yapmamışsa, passangersInfo'dan gelen veriyi al
+      // If not logged in, use provided passenger info
       if (!passengerInfo) {
         return res.status(400).send({
           error: true,
           message: "Passenger information is required.",
         });
       }
-
       passenger = passengerInfo;
     }
 
@@ -68,7 +95,14 @@ module.exports = {
     });
   },
 
+  // Read a Reservation by ID
   read: async (req, res) => {
+    /* 
+              #swagger.tags = ["Reservations"]
+              #swagger.summary = "Read Reservation"
+              #swagger.description = "Fetch details of a specific reservation by ID"
+          */
+
     const reservation = await Reservation.findById(req.params.id).populate(
       "flightId passengers"
     );
@@ -86,29 +120,48 @@ module.exports = {
     });
   },
 
+  // Update a Reservation by ID
   update: async (req, res) => {
-    // Update reservation by ID
+    /* 
+              #swagger.tags = ["Reservations"]
+              #swagger.summary = "Update Reservation"
+              #swagger.parameters['body'] = {
+                  in: 'body',
+                  required: true,
+                  schema: {
+                      "flightId": "1234567890abcdef12345678",
+                      "passengers": ["1234567890abcdef12345679"]
+                  }
+              }
+          */
+
     const result = await Reservation.updateOne(
       { _id: req.params.id },
       req.body,
       { new: true, runValidators: true }
     );
 
-    if (!result.nModified) {
+    if (!result.modifiedCount) {
       return res.status(404).send({
         error: true,
-        message: "Reservation not found or no changes",
+        message: "Reservation not found or no changes made",
       });
     }
 
     res.status(202).send({
       error: false,
-      result: result,
+      result,
     });
   },
 
+  // Delete a Reservation by ID
   deleteReservation: async (req, res) => {
-    // Delete reservation by ID
+    /* 
+              #swagger.tags = ["Reservations"]
+              #swagger.summary = "Delete Reservation"
+              #swagger.description = "Delete a specific reservation by ID"
+          */
+
     const { deletedCount } = await Reservation.deleteOne({
       _id: req.params.id,
     });

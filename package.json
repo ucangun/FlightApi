@@ -9,7 +9,7 @@
     "debug": "DEBUG=* nodemon"
   },
   "keywords": [],
-  "author": "Clarusway",
+  "author": "ucangun",
   "license": "ISC Licence",
   "dependencies": {
     "cookie-parser": "^1.4.7",

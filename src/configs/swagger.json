@@ -4,10 +4,10 @@
     "version": "1.0.0",
     "title": "Flight Reservation API",
     "description": "Flight Reservation Management System",
-    "termsOfService": "http://www.clarusway.com",
+    "termsOfService": "http://www.ucangun.com",
     "contact": {
-      "name": "Clarusway",
-      "email": "ali@clarusway.com"
+      "name": "ucangun",
+      "email": "ucangun76@gmail.com"
     },
     "license": {
       "name": "ISC Licence"
@@ -33,11 +33,19 @@
         "description": "",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
             "name": "body",
             "in": "body",
             "schema": {
               "type": "object",
               "properties": {
+                "createdId": {
+                  "example": "any"
+                },
                 "userName": {
                   "example": "any"
                 },
@@ -54,6 +62,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -66,6 +77,11 @@
         "summary": "Refresh",
         "description": "Refresh with   for get accessToken",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
@@ -89,6 +105,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -100,9 +119,19 @@
         ],
         "summary": "List Users",
         "description": "  You can send query with endpoint for filter[], search[], sort[], page and limit.  <ul> Examples:   <li>URL/?<b>filter[field1]=value1&filter[field2]=value2</b></li>   <li>URL/?<b>search[field1]=value1&search[field2]=value2</b></li>   <li>URL/?<b>sort[field1]=1&sort[field2]=-1</b></li>   <li>URL/?<b>page=2&limit=1</b></li>  </ul>  ",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
@@ -113,6 +142,11 @@
         "summary": "Create User",
         "description": "",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
@@ -151,6 +185,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -168,11 +205,19 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
@@ -190,77 +235,8 @@
             "type": "string"
           },
           {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "type": "string",
-                  "example": "test"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "1234"
-                },
-                "email": {
-                  "type": "string",
-                  "example": "test@site.com"
-                },
-                "isActive": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "isStaff": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "isAdmin": {
-                  "type": "boolean",
-                  "example": false
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "Accepted"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Delete User",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Update User",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -301,6 +277,108 @@
         "responses": {
           "202": {
             "description": "Accepted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Delete User",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "createdId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update User",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "test"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "1234"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "test@site.com"
+                },
+                "isActive": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "isStaff": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "isAdmin": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -312,9 +390,19 @@
         ],
         "summary": "List Flights",
         "description": "   You can send query with endpoint for filter[], search[], sort[], page and limit.   <ul> Examples:   <li>URL/?<b>filter[field1]=value1&filter[field2]=value2</b></li>   <li>URL/?<b>search[field1]=value1&search[field2]=value2</b></li>   <li>URL/?<b>sort[field1]=1&sort[field2]=-1</b></li>   <li>URL/?<b>page=2&limit=1</b></li>   </ul>  ",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
@@ -325,6 +413,11 @@
         "summary": "Create Flight",
         "description": "",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
@@ -367,6 +460,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -384,11 +480,19 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Not Found"
@@ -406,6 +510,11 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -446,6 +555,9 @@
         "responses": {
           "202": {
             "description": "Accepted"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Not Found"
@@ -464,11 +576,31 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "createdId": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Not Found"
@@ -486,6 +618,11 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -527,6 +664,9 @@
           "202": {
             "description": "Accepted"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "404": {
             "description": "Not Found"
           }
@@ -535,24 +675,70 @@
     },
     "/reservations/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "List Reservations",
+        "description": "Fetch all reservations with pagination and filters",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Create Reservation",
+        "description": "Create a new reservation for a flight and passengers",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "flightId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "1234567890abcdef12345678"
+                },
+                "passengers": {
+                  "type": "object",
+                  "properties": {
+                    "firstName": {
+                      "type": "string",
+                      "example": "John"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Doe"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "example": "Male"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "john.doe@example.com"
+                    }
+                  }
                 }
               }
             }
@@ -565,6 +751,9 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "404": {
             "description": "Not Found"
           }
@@ -573,12 +762,21 @@
     },
     "/reservations/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Read Reservation",
+        "description": "Fetch details of a specific reservation by ID",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -586,12 +784,19 @@
           "200": {
             "description": "OK"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "404": {
             "description": "Not Found"
           }
         }
       },
       "put": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Update Reservation",
         "description": "",
         "parameters": [
           {
@@ -599,11 +804,42 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "flightId": {
+                  "type": "string",
+                  "example": "1234567890abcdef12345678"
+                },
+                "passengers": {
+                  "type": "array",
+                  "example": [
+                    "1234567890abcdef12345679"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         ],
         "responses": {
           "202": {
             "description": "Accepted"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Not Found"
@@ -611,18 +847,42 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Delete Reservation",
+        "description": "Delete a specific reservation by ID",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "createdId": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Not Found"
@@ -630,6 +890,10 @@
         }
       },
       "patch": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Update Reservation",
         "description": "",
         "parameters": [
           {
@@ -637,11 +901,311 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "flightId": {
+                  "type": "string",
+                  "example": "1234567890abcdef12345678"
+                },
+                "passengers": {
+                  "type": "array",
+                  "example": [
+                    "1234567890abcdef12345679"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         ],
         "responses": {
           "202": {
             "description": "Accepted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/passengers/": {
+      "get": {
+        "tags": [
+          "Passengers"
+        ],
+        "summary": "List Passengers",
+        "description": "Fetch all passengers from the database",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Passengers"
+        ],
+        "summary": "Create Passenger",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "example": "John"
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": "Doe"
+                },
+                "gender": {
+                  "type": "string",
+                  "example": "Male"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john.doe@example.com"
+                },
+                "createdId": {
+                  "type": "string",
+                  "example": "userId"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/passengers/{id}": {
+      "get": {
+        "tags": [
+          "Passengers"
+        ],
+        "summary": "Read Passenger",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Passengers"
+        ],
+        "summary": "Update Passenger",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "example": "John"
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": "Doe"
+                },
+                "gender": {
+                  "type": "string",
+                  "example": "Male"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john.doe@example.com"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Passengers"
+        ],
+        "summary": "Delete Passenger",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "createdId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Passengers"
+        ],
+        "summary": "Update Passenger",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "example": "John"
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": "Doe"
+                },
+                "gender": {
+                  "type": "string",
+                  "example": "Male"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john.doe@example.com"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Not Found"
